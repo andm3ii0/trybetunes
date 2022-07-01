@@ -1,4 +1,6 @@
 import React from 'react';
+import searchAlbumsAPI from '../services/searchAlbumsAPI';
+import CardAlbum from './CardAlbum';
 import Header from './Header';
 
 class Search extends React.Component {
@@ -6,7 +8,10 @@ class Search extends React.Component {
     super();
     this.state = {
       search: '',
+      prevSearch: '',
       buttonDisabled: true,
+      searchResult: [],
+      searchClick: false,
     };
   }
 
@@ -18,8 +23,35 @@ class Search extends React.Component {
     });
   }
 
+  onHandleClick = async () => {
+    const { search } = this.state;
+    this.setState((prevState) => ({ search: '',
+      prevSearch: prevState.search,
+      searchClick: true }));
+    const searchResult = await searchAlbumsAPI(search);
+    this.setState({ searchResult });
+  }
+
   render() {
-    const { search, buttonDisabled } = this.state;
+    const { search, buttonDisabled, searchResult, searchClick, prevSearch } = this.state;
+
+    const searchResultComponentAlbuns = (
+      <div>
+        <p>
+          {`Resultado de álbuns de: ${prevSearch}`}
+        </p>
+        {searchResult.map((album) => (<CardAlbum
+          key={ album.colectionId }
+          data={ album }
+        />))}
+      </div>);
+
+    const searchResultComponentNotFound = (<p>Nenhum álbum foi encontrado</p>);
+
+    const searchResultComponent = searchResult.length !== 0
+      ? searchResultComponentAlbuns
+      : searchResultComponentNotFound;
+
     return (
       <div data-testid="page-search">
         <Header />
@@ -36,12 +68,15 @@ class Search extends React.Component {
               type="button"
               data-testid="search-artist-button"
               disabled={ buttonDisabled }
+              onClick={ this.onHandleClick }
             >
               Pesquisar
 
             </button>
           </label>
         </form>
+        {searchClick && searchResultComponent}
+
       </div>
     );
   }
