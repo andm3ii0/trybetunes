@@ -9,16 +9,43 @@ import ProfileEdit from './pages/ProfileEdit';
 import Search from './pages/Search';
 
 class App extends React.Component {
+  constructor() {
+    super();
+
+    this.state = {
+      name: '',
+      buttonDisabled: true,
+    };
+  }
+
+  onHandleChange = ({ target }) => {
+    const { value } = target;
+    const caractersButtonEnabled = 3;
+    this.setState(() => ({
+      name: value,
+      buttonDisabled: value.length < caractersButtonEnabled }));
+  }
+
   render() {
+    const { name, buttonDisabled } = this.state;
     return (
       <Switch>
-        <Route exact path="/" component={ Login } />
-        <Route exact path="/search" component={ Search } />
-        <Route exact path="/album/:id" component={ Album } />
-        <Route exact path="/favorites" component={ Favorites } />
+        <Route path="/search" component={ Search } />
+        <Route path="/album/:id" component={ Album } />
+        <Route path="/favorites" component={ Favorites } />
         <Route exact path="/profile" component={ Profile } />
-        <Route exact path="/profile/:edit" component={ ProfileEdit } />
-        <Route exact path="*" component={ NotFound } />
+        <Route path="/profile/:edit" component={ ProfileEdit } />
+        <Route
+          exact
+          path="/"
+          render={ (props) => (<Login
+            { ...props }
+            name={ name }
+            buttonDisabled={ buttonDisabled }
+            funcOnChange={ this.onHandleChange }
+          />) }
+        />
+        <Route path="*" component={ NotFound } />
       </Switch>
     );
   }
