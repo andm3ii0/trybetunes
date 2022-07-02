@@ -33,14 +33,13 @@ class Album extends React.Component {
         <div>
           <p data-testid="artist-name">{artistName}</p>
           <p data-testid="album-name">{`${albumName}`}</p>
-          {albumMusics.map((music) => {
-            console.log(music.trackViewUrl);
-            return (<MusicCard
-              key={ music.trackId }
-              musicLink={ music.trackViewUrl }
-              musicName={ music.trackName }
-            />);
-          })}
+          {albumMusics.map((music) => (<MusicCard
+            key={ music.trackId }
+            musicLink={ music.trackViewUrl }
+            musicName={ music.trackName }
+            musicId={ music.trackId }
+            musicObj={ music }
+          />))}
         </div>
       </div>
     );
