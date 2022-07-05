@@ -2,6 +2,7 @@ import React from 'react';
 import searchAlbumsAPI from '../services/searchAlbumsAPI';
 import CardAlbum from './CardAlbum';
 import Header from './Header';
+import '../CSS/search.css';
 
 class Search extends React.Component {
   constructor() {
@@ -18,16 +19,19 @@ class Search extends React.Component {
   onHandleChange = ({ target }) => {
     const { value } = target;
     const caracteresButonEnabled = 2;
-    this.setState({ search: value,
+    this.setState({
+      search: value,
       buttonDisabled: value.length < caracteresButonEnabled,
     });
   }
 
   onHandleClick = async () => {
     const { search } = this.state;
-    this.setState((prevState) => ({ search: '',
+    this.setState((prevState) => ({
+      search: '',
       prevSearch: prevState.search,
-      searchClick: true }));
+      searchClick: true,
+    }));
     const searchResult = await searchAlbumsAPI(search);
     this.setState({ searchResult });
   }
@@ -56,24 +60,27 @@ class Search extends React.Component {
       <div data-testid="page-search">
         <Header />
         <form>
-          <label htmlFor="search">
+          <label className="input" htmlFor="search">
             <input
               name="search"
               value={ search }
-              id="serch"
+              id="search"
+              className="search"
               data-testid="search-artist-input"
               onChange={ this.onHandleChange }
             />
-            <button
-              type="button"
-              data-testid="search-artist-button"
-              disabled={ buttonDisabled }
-              onClick={ this.onHandleClick }
-            >
-              Pesquisar
-
-            </button>
           </label>
+          <button
+            className="button"
+            type="button"
+            data-testid="search-artist-button"
+            disabled={ buttonDisabled }
+            onClick={ this.onHandleClick }
+          >
+            Pesquisar
+
+          </button>
+
         </form>
         {searchClick && searchResultComponent}
 

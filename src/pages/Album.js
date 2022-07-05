@@ -4,6 +4,7 @@ import getMusics from '../services/musicsAPI';
 import Header from './Header';
 import MusicCard from './MusicCard';
 import { getFavoriteSongs } from '../services/favoriteSongsAPI';
+import Loading from './Loading';
 
 class Album extends React.Component {
   constructor() {
@@ -18,36 +19,49 @@ class Album extends React.Component {
     const { match } = this.props;
     const { params } = match;
     const { id } = params;
+    this.setState({ loading: true });
     const albumMusics = await getMusics(id);
-    const albumInfo = albumMusics.shift();
     const favoriteSongs = await getFavoriteSongs();
     console.log(favoriteSongs.length);
-    this.setState({ albumMusics,
-      artistName: albumInfo.artistName,
-      albumName: albumInfo.collectionName,
+    this.setState({ albumMusics: albumMusics.slice(1),
+      artistName: albumMusics[0].artistName,
+      albumName: albumMusics[0].collectionName,
       favoriteSongs,
+      loading: false,
     });
   }
 
   render() {
-    const { albumMusics, artistName, albumName, favoriteSongs } = this.state;
+    const { albumMusics, artistName, albumName, favoriteSongs, loading } = this.state;
     return (
       <div data-testid="page-album">
         <Header />
-        <div>
-          <p data-testid="artist-name">{ artistName }</p>
-          <p data-testid="album-name">{ albumName }</p>
-          {albumMusics.map((music) => (<MusicCard
-            key={ music.trackId }
-            musicLink={ music.previewUrl }
-            musicName={ music.trackName }
-            musicId={ music.trackId }
-            musicObj={ music }
-            isFavorite={
-              favoriteSongs.find((song) => song.trackId === music.trackId) !== undefined
-            }
-          />))}
-        </div>
+        {loading ? <Loading />
+          : (
+            <div>
+              <p data-testid="artist-name">
+                Artista:
+                {' '}
+                { artistName }
+              </p>
+              <p data-testid="album-name">
+                Album:
+                {' '}
+                { albumName }
+              </p>
+              {albumMusics.map((music) => (<MusicCard
+                key={ music.trackId }
+                musicLink={ music.previewUrl }
+                musicName={ music.trackName }
+                musicId={ music.trackId }
+                musicObj={ music }
+                isFavorite={
+                  favoriteSongs
+                    .find((song) => song.trackId === music.trackId) !== undefined
+                }
+              />))}
+            </div>)}
+
       </div>
     );
   }
