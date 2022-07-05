@@ -34,7 +34,7 @@ class Favorites extends React.Component {
           musicName={ music.trackName }
           musicId={ music.trackId }
           musicObj={ music }
-          removeSong={ this.removeSong }
+          removeSongs={ this.removeSong }
           isFavorite={
             favoriteSongs.find((song) => song.trackId === music.trackId) !== undefined
           }

@@ -31,7 +31,7 @@ class MusicCard extends React.Component {
   }
 
   render() {
-    const { musicLink, musicName, musicId } = this.props;
+    const { musicLink, musicName, musicId, removeSongs } = this.props;
     const { inputValue, loading } = this.state;
 
     return (
@@ -53,7 +53,7 @@ class MusicCard extends React.Component {
                 id={ musicId }
                 data-testid={ `checkbox-music-${musicId}` }
                 onChange={ this.onHandleChange }
-                onClick={ this.props.removeSong }
+                onClick={ removeSongs }
                 checked={ inputValue }
               />
             </label>)}
@@ -65,12 +65,17 @@ class MusicCard extends React.Component {
 
 MusicCard.propTypes = {
   isFavorite: PropTypes.bool.isRequired,
+  removeSongs: PropTypes.func,
   musicLink: PropTypes.string.isRequired,
   musicName: PropTypes.string.isRequired,
   musicId: PropTypes.number.isRequired,
   musicObj: PropTypes.shape({
     trackId: PropTypes.number.isRequired,
   }).isRequired,
+};
+
+MusicCard.defaultProps = {
+  removeSongs: () => {},
 };
 
 export default MusicCard;
