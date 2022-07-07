@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { getUser } from '../services/userAPI';
 import Loading from './Loading';
-import '../CSS/header.css';
 
 class Header extends React.Component {
   constructor() {
