@@ -2,7 +2,6 @@ import React from 'react';
 import searchAlbumsAPI from '../services/searchAlbumsAPI';
 import CardAlbum from './CardAlbum';
 import Header from './Header';
-import '../CSS/search.css';
 
 class Search extends React.Component {
   constructor() {
